@@ -6,8 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -27,12 +25,9 @@ public class KubeapiApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        while(true) {
-            Map<String, String> allPodIpsInCurrentNamespace = kubernetesService.getAllPodIpsInCurrentNamespace();
-            log.info(allPodIpsInCurrentNamespace.toString());
-
+        while (true) {
+            kubernetesService.getAllPodIpsInCurrentNamespace();
             TimeUnit.SECONDS.sleep(10);
-
         }
     }
 }
