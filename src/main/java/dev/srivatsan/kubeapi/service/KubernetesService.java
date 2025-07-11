@@ -31,8 +31,7 @@ public class KubernetesService {
 
     public void getAllPodIpsInCurrentNamespace() throws ApiException {
 
-//        String namespace = System.getenv().getOrDefault("KUBERNETES_NAMESPACE", "default");
-        String namespace = "default";
+        String namespace = System.getenv().getOrDefault("KUBERNETES_NAMESPACE", "default");
 
         CoreV1Api.APIlistNamespacedPodRequest apIlistNamespacedPodRequest = coreV1Api.listNamespacedPod(namespace);
         List<V1Pod> podList = apIlistNamespacedPodRequest.execute().getItems();
@@ -40,16 +39,17 @@ public class KubernetesService {
 
         CoreV1Api.APIlistNamespacedServiceRequest serviceNames = coreV1Api.listNamespacedService(namespace);
         List<V1Service> serviceList = serviceNames.execute().getItems();
-        log.info("Listing Services in Namespace: {}", serviceList);
+        log.debug("Listing Services in Namespace: {}", serviceList);
 
         AppsV1Api.APIlistNamespacedDeploymentRequest deployments = appsV1Api.listNamespacedDeployment(namespace);
         List<V1Deployment> deploymentList = deployments.execute().getItems();
-        log.info("Listing Deployments in Namespace: {}", deploymentList);
+        log.debug("Listing Deployments in Namespace: {}", deploymentList);
 
-        podList.stream()
-                .forEach(pod -> {
-                    log.info("podName: {}, status: {}, podIp: {}", pod.getMetadata().getName(), pod.getStatus().getPhase(), pod.getStatus().getPodIP());
-                });
-
+        podList.forEach(pod ->
+                        log.info(
+                                "podName: '{}', status: '{}', podIp: '{}'",
+                                pod.getMetadata().getName(), pod.getStatus().getPhase(), pod.getStatus().getPodIP()
+                        )
+                );
     }
 }
