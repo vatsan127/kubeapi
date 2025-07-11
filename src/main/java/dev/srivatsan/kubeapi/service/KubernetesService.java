@@ -46,10 +46,13 @@ public class KubernetesService {
         log.debug("Listing Deployments in Namespace: {}", deploymentList);
 
         podList.forEach(pod ->
-                        log.info(
-                                "podName: '{}', status: '{}', podIp: '{}'",
-                                pod.getMetadata().getName(), pod.getStatus().getPhase(), pod.getStatus().getPodIP()
-                        )
-                );
+                {
+                    log.info(
+                            "podName: '{}', status: '{}', podIp: '{}'",
+                            pod.getMetadata().getName(), pod.getStatus().getPhase(), pod.getStatus().getPodIP()
+                    );
+                    log.info("------------------------------------------------------------------------------------------------------------------------------");
+                }
+        );
     }
 }
