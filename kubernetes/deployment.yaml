@@ -46,15 +46,10 @@ spec:
       serviceAccountName: kubeapi-service-account
       containers:
       - name: kubeapi
-        image: kubeapi:latest
         imagePullPolicy: Never
+        image: kubeapi:latest
         ports:
         - containerPort: 8080
-        env:
-        - name: KUBERNETES_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
 
 ---
 apiVersion: v1
@@ -66,7 +61,8 @@ spec:
     app: kubeapi
   ports:
     - protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 8080
-  type: ClusterIP
+      nodePort: 30052
+  type: NodePort
 

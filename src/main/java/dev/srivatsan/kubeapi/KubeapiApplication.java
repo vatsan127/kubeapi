@@ -26,8 +26,8 @@ public class KubeapiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         while (true) {
-            kubernetesService.getAllPodIpsInCurrentNamespace();
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(30);
+            kubernetesService.getPodDetails();
         }
     }
 }

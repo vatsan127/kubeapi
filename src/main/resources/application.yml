@@ -1,1 +1,9 @@
-spring.application.name: kubeapi
+spring:
+  application:
+    name: kubeapi
+    version: v1
+
+global:
+  namespace: default
+  exclusionList: app1, app2, app3
+  debugModeEnabled: false
