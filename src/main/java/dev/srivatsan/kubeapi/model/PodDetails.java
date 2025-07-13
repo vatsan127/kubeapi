@@ -9,5 +9,5 @@ public class PodDetails {
     private String name;
     private String ip;
     private boolean isRunning;
-    private List<String> failureReason;
+    private List<FailureReason> failureReason;
 }

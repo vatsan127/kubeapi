@@ -1,13 +1,13 @@
 package dev.srivatsan.kubeapi.service;
 
 import dev.srivatsan.kubeapi.config.AppConfig;
+import dev.srivatsan.kubeapi.model.FailureReason;
 import dev.srivatsan.kubeapi.model.PodDetails;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.AppsV1Api;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.V1ContainerState;
 import io.kubernetes.client.openapi.models.V1ContainerStateWaiting;
 import io.kubernetes.client.openapi.models.V1ContainerStatus;
 import io.kubernetes.client.openapi.models.V1Pod;
@@ -56,11 +56,19 @@ public class KubernetesService {
                     .toList();
 
             boolean isReady = notReadyContainers.isEmpty();
-            List<String> failureReasonList = isReady ? Collections.emptyList() : notReadyContainers.stream()
-                    .map(V1ContainerStatus::getState)
-                    .map(V1ContainerState::getWaiting)
-                    .filter(waitingState -> waitingState != null)
-                    .map(V1ContainerStateWaiting::getReason)
+            List<FailureReason> failureReasonList = isReady ? Collections.emptyList() : notReadyContainers.stream()
+                    .map(containerStatus -> {
+                        V1ContainerStateWaiting waitingState = containerStatus.getState().getWaiting();
+                        if (waitingState != null) {
+                            return new FailureReason(
+                                    containerStatus.getName(),
+                                    waitingState.getReason(),
+                                    waitingState.getMessage()
+                            );
+                        }
+                        return null;
+                    })
+                    .filter(reason -> reason != null)
                     .toList();
 
             PodDetails podDetails = new PodDetails();
